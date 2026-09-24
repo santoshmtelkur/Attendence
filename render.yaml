@@ -1,0 +1,86 @@
+databases:
+  - name: attendance-db
+    databaseName: attendance
+    user: attendance_user
+    plan: free
+
+services:
+  # ---------- Backend: Spring Boot, built from backend/Dockerfile ----------
+  - type: web
+    name: attendance-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # --- Database: wired automatically to the attendance-db instance above ---
+      - key: DB_HOST
+        fromDatabase:
+          name: attendance-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: attendance-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: attendance-db
+          property: database
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: attendance-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: attendance-db
+          property: password
+
+      # --- Auth: Render generates a strong random secret automatically ---
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION_MS
+        value: "86400000"
+
+      # --- App behaviour ---
+      - key: LOW_ATTENDANCE_THRESHOLD
+        value: "75"
+      - key: DIGEST_CRON
+        value: "0 0 8 * * MON"
+      - key: SEED_DEMO_DATA
+        value: "true"
+
+      # --- Email: OFF by default so the first deploy never fails on missing SMTP creds.
+      #     Flip MAIL_ENABLED to "true" and fill MAIL_USERNAME / MAIL_PASSWORD once you
+      #     have real SMTP credentials (see the notes given alongside this file). ---
+      - key: MAIL_ENABLED
+        value: "false"
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_FROM
+        value: attendance-noreply@college.edu
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+  # ---------- Frontend: React/Vite, built as a static site ----------
+  - type: web
+    name: attendance-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      # Predictable because the backend service above is named "attendance-backend" -
+      # Render always serves it at https://attendance-backend.onrender.com
+      - key: VITE_API_URL
+        value: https://attendance-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

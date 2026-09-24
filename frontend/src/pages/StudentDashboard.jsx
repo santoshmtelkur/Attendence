@@ -30,8 +30,13 @@ export default function StudentDashboard() {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl font-semibold mb-1">My Attendance</h1>
-      <p className="text-sm text-ink/50 mb-8">{summary.rollNumber} · {summary.studentName}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-6 items-center mb-8">
+        <div>
+          <h1 className="font-serif text-2xl font-semibold mb-1">My Attendance</h1>
+          <p className="text-sm text-ink/50">{summary.rollNumber} · {summary.studentName}</p>
+        </div>
+        <img src="/images/dashboard-illustration.svg" alt="Attendance dashboard illustration" className="w-full rounded-xl" />
+      </div>
 
       {isLow && (
         <div className="mb-6 rounded-lg border border-bad/30 bg-bad/5 px-5 py-4 text-sm text-bad">

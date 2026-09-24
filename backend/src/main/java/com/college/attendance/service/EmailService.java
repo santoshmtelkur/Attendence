@@ -29,14 +29,15 @@ public class EmailService {
 
     /**
      * Sends an immediate notification when a student is marked ABSENT.
+     *
+     * The attendance transaction passes only plain values to this async method.
+     * Passing JPA entities into @Async can make another thread access lazy
+     * Hibernate proxies while the original transaction is still running.
      */
     @Async
-    public void sendAbsenceNotification(AttendanceRecord record) {
-        var student = record.getStudent();
-        var session = record.getSession();
-        var subject = session.getSectionSubjectFaculty().getSubject();
-
-        String subjectLine = "Attendance Alert: Marked Absent - " + subject.getName();
+    public void sendAbsenceNotification(String studentName, String studentEmail, String parentEmail,
+                                        String subjectName, String sessionDate, int period) {
+        String subjectLine = "Attendance Alert: Marked Absent - " + subjectName;
         String body = String.format(
                 "Dear %s,%n%n" +
                 "You have been marked ABSENT for the following class:%n%n" +
@@ -46,12 +47,12 @@ public class EmailService {
                 "If you believe this is incorrect, please contact your faculty to raise a correction request.%n%n" +
                 "Regards,%n" +
                 "College Attendance System",
-                student.getName(), subject.getName(), session.getSessionDate().format(DATE_FMT), session.getPeriod()
+                studentName, subjectName, sessionDate, period
         );
 
-        sendMail(student.getEmail(), subjectLine, body);
-        if (student.getParentEmail() != null && !student.getParentEmail().isBlank()) {
-            sendMail(student.getParentEmail(), subjectLine + " (Parent Copy)", body);
+        sendMail(studentEmail, subjectLine, body);
+        if (parentEmail != null && !parentEmail.isBlank()) {
+            sendMail(parentEmail, subjectLine + " (Parent Copy)", body);
         }
     }
 

@@ -18,6 +18,8 @@ api.interceptors.response.use(
     if (err.response?.status === 401) {
       localStorage.removeItem('attendo_token')
       localStorage.removeItem('attendo_user')
+      sessionStorage.removeItem('attendo_token')
+      sessionStorage.removeItem('attendo_user')
       if (!window.location.pathname.includes('/login')) {
         window.location.href = '/login'
       }

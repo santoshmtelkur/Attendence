@@ -20,6 +20,8 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     localStorage.removeItem('attendo_token')
     localStorage.removeItem('attendo_user')
+    sessionStorage.removeItem('attendo_token')
+    sessionStorage.removeItem('attendo_user')
     setUser(null)
   }, [])
 

@@ -12,8 +12,15 @@ export default function Layout({ children }) {
     <div className="min-h-screen flex">
       <aside className="w-60 shrink-0 bg-navy text-white flex flex-col">
         <div className="px-6 py-6 border-b border-white/10">
-          <div className="font-serif text-2xl font-semibold tracking-tight">Attendo</div>
-          <div className="text-[11px] text-white/50 mt-0.5">College Attendance System</div>
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <img src="/images/attendo-mark.svg" alt="" className="h-7 w-7" />
+            </div>
+            <div>
+              <div className="font-serif text-2xl font-semibold tracking-tight">Attendo</div>
+              <div className="text-[11px] text-white/50 mt-0.5">College Attendance System</div>
+            </div>
+          </div>
         </div>
         <div className="px-6 py-5">
           <div className="text-sm font-medium">{user?.name}</div>
@@ -22,8 +29,9 @@ export default function Layout({ children }) {
         <div className="mt-auto px-6 py-5 border-t border-white/10">
           <button
             onClick={() => { logout(); navigate('/login') }}
-            className="text-sm text-white/70 hover:text-white transition-colors"
+            className="btn w-full justify-start border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white"
           >
+            <span aria-hidden="true">↪</span>
             Sign out
           </button>
         </div>

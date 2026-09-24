@@ -76,8 +76,7 @@ services:
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist
     envVars:
-      # Predictable because the backend service above is named "attendance-backend" -
-      # Render always serves it at https://attendance-backend.onrender.com
+      # Public backend URL for the current Render service.
       - key: VITE_API_URL
         value: https://attendance-backend-q9f9.onrender.com
     routes:

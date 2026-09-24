@@ -82,11 +82,20 @@ public class AttendanceService {
             record.setStatus(entry.status());
             record.setRemarks(entry.remarks());
             record.setUpdatedAt(LocalDateTime.now());
-            AttendanceRecord saved = recordRepository.save(record);
+            recordRepository.save(record);
 
             boolean isAbsentNow = entry.status() == AttendanceStatus.ABSENT;
             if (isAbsentNow && !wasAbsentBefore) {
-                emailService.sendAbsenceNotification(saved);
+                // Snapshot all values while the transaction owns the JPA session.
+                // Do not pass the managed entity to @Async.
+                emailService.sendAbsenceNotification(
+                        student.getName(),
+                        student.getEmail(),
+                        student.getParentEmail(),
+                        session.getSectionSubjectFaculty().getSubject().getName(),
+                        session.getSessionDate().format(java.time.format.DateTimeFormatter.ofPattern("EEE, dd MMM yyyy")),
+                        session.getPeriod()
+                );
             }
         }
 

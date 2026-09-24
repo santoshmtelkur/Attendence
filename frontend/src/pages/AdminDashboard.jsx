@@ -357,7 +357,7 @@ function StudentsTab() {
     setSaving(true)
     try {
       await MasterApi.createStudent({ ...form, departmentId: Number(form.departmentId), sectionId: Number(form.sectionId) })
-      toast.success('Student added. Default password is "password123" unless one was set.')
+      toast.success('Student added. Login password has been set by admin.')
       setForm((f) => ({ ...f, rollNumber: '', name: '', email: '', parentEmail: '', phone: '', username: '', password: '' }))
       load()
     } catch (err) {
@@ -403,6 +403,28 @@ function StudentsTab() {
           <select className="input" value={form.sectionId} onChange={(e) => setForm({ ...form, sectionId: e.target.value })}>
             {sections.map((s) => <option key={s.id} value={s.id}>{s.name} (Sem {s.semester}, {s.department?.code})</option>)}
           </select>
+        </div>
+        <div>
+          <label className="label">Login username (optional)</label>
+          <input
+            className="input"
+            value={form.username}
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            placeholder="Defaults to roll number"
+          />
+        </div>
+        <div>
+          <label className="label">Student password</label>
+          <input
+            type="password"
+            className="input"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            placeholder="Set login password"
+            minLength={6}
+            required
+          />
+          <p className="text-[11px] text-ink/40 mt-1">The password is securely hashed before it is stored.</p>
         </div>
         <button className="btn-primary w-full" disabled={saving}>{saving ? 'Saving…' : 'Add student'}</button>
       </form>

@@ -75,7 +75,7 @@ public class MasterDataService {
         if (userRepository.existsByUsername(username)) {
             throw new BadRequestException("Username already taken: " + username);
         }
-        String rawPassword = (req.password() != null && !req.password().isBlank()) ? req.password() : "password123";
+        String rawPassword = req.password().trim();
         User user = new User(null, username, passwordEncoder.encode(rawPassword), req.email(), Role.FACULTY, true, null, faculty);
         userRepository.save(user);
         return faculty;
@@ -104,7 +104,7 @@ public class MasterDataService {
         if (userRepository.existsByUsername(username)) {
             throw new BadRequestException("Username already taken: " + username);
         }
-        String rawPassword = (req.password() != null && !req.password().isBlank()) ? req.password() : "password123";
+        String rawPassword = req.password().trim();
         User user = new User(null, username, passwordEncoder.encode(rawPassword), req.email(), Role.STUDENT, true, student, null);
         userRepository.save(user);
         return student;

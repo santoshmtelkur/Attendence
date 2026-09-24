@@ -2,6 +2,7 @@ package com.college.attendance.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class MasterDataDtos {
 
@@ -17,7 +18,7 @@ public class MasterDataDtos {
 
     public record StudentRequest(@NotBlank String rollNumber, @NotBlank String name, @NotBlank String email,
                                   String parentEmail, String phone, @NotNull Long departmentId,
-                                  @NotNull Long sectionId, String username, String password) {}
+                                  @NotNull Long sectionId, String username, @NotBlank @Size(min = 6, max = 100) String password) {}
 
     public record AssignmentRequest(@NotNull Long sectionId, @NotNull Long subjectId, @NotNull Long facultyId) {}
 }

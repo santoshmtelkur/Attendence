@@ -32,6 +32,7 @@ export default function Login() {
           <div className="text-white/50 text-sm mt-1">College Attendance System</div>
         </div>
         <div className="max-w-sm">
+          <img src="/images/attendance-hero.svg" alt="Attendance dashboard illustration" className="w-full max-w-md mb-8 rounded-2xl shadow-2xl" />
           <p className="font-serif text-2xl leading-snug text-white/90">
             Every class, every roll call, one accurate record.
           </p>

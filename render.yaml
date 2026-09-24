@@ -79,7 +79,7 @@ services:
       # Predictable because the backend service above is named "attendance-backend" -
       # Render always serves it at https://attendance-backend.onrender.com
       - key: VITE_API_URL
-        value: https://attendance-backend.onrender.com
+        value: https://attendance-backend-q9f9.onrender.com
     routes:
       - type: rewrite
         source: /*

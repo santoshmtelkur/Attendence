@@ -1,6 +1,5 @@
 package com.college.attendance.service;
 
-import com.college.attendance.entity.AttendanceRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +23,6 @@ public class EmailService {
 
     @Value("${app.mail.enabled:true}")
     private boolean mailEnabled;
-
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
 
     /**
      * Sends an immediate notification when a student is marked ABSENT.

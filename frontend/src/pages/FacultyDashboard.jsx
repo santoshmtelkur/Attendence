@@ -28,7 +28,11 @@ function MarkAttendanceTab() {
   const { user } = useAuth()
   const [assignments, setAssignments] = useState([])
   const [assignmentId, setAssignmentId] = useState('')
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10))
+  const [date, setDate] = useState(() => {
+    const now = new Date()
+    const offsetMs = now.getTimezoneOffset() * 60 * 1000
+    return new Date(now.getTime() - offsetMs).toISOString().slice(0, 10)
+  })
   const [period, setPeriod] = useState(1)
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(false)

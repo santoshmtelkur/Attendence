@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StatusBadge } from './Badges'
 
 const STATUSES = ['PRESENT', 'ABSENT', 'LATE', 'EXCUSED']
@@ -16,6 +16,15 @@ export default function AttendanceGrid({ session, onMark, onRequestCorrection, m
     session.records.forEach((r) => { init[r.studentId] = r.status || 'PRESENT' })
     return init
   })
+
+  // Reset the local status draft whenever the faculty loads a different session.
+  // Without this, React keeps the previous session's selections when only the
+  // session prop changes.
+  useEffect(() => {
+    const next = {}
+    session.records.forEach((r) => { next[r.studentId] = r.status || 'PRESENT' })
+    setDraft(next)
+  }, [session.sessionId, session.records])
 
   function setStatus(studentId, status) {
     setDraft((d) => ({ ...d, [studentId]: status }))

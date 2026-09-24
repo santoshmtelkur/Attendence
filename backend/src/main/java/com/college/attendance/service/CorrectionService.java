@@ -70,7 +70,24 @@ public class CorrectionService {
 
             boolean isAbsentNow = correction.getNewStatus() == AttendanceStatus.ABSENT;
             if (isAbsentNow && !wasAbsent) {
-                emailService.sendAbsenceNotification(record);
+                // Snapshot all values while the transaction owns the JPA session.
+                // Never pass a managed JPA entity to the async email service.
+                String studentName = record.getStudent().getName();
+                String studentEmail = record.getStudent().getEmail();
+                String parentEmail = record.getStudent().getParentEmail();
+                String subjectName = record.getSession().getSectionSubjectFaculty().getSubject().getName();
+                String sessionDate = record.getSession().getSessionDate()
+                        .format(java.time.format.DateTimeFormatter.ofPattern("EEE, dd MMM yyyy"));
+                int period = record.getSession().getPeriod();
+
+                emailService.sendAbsenceNotification(
+                        studentName,
+                        studentEmail,
+                        parentEmail,
+                        subjectName,
+                        sessionDate,
+                        period
+                );
             }
         }
 

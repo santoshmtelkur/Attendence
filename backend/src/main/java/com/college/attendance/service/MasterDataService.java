@@ -75,7 +75,9 @@ public class MasterDataService {
         if (userRepository.existsByUsername(username)) {
             throw new BadRequestException("Username already taken: " + username);
         }
-        String rawPassword = req.password().trim();
+        String rawPassword = (req.password() == null || req.password().isBlank())
+                ? "password123"
+                : req.password().trim();
         User user = new User(null, username, passwordEncoder.encode(rawPassword), req.email(), Role.FACULTY, true, null, faculty);
         userRepository.save(user);
         return faculty;

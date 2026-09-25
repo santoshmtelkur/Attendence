@@ -80,6 +80,10 @@ public class EmailService {
     }
 
     private void sendMail(String to, String subject, String body) {
+        if (to == null || to.isBlank()) {
+            log.warn("Skipping email because recipient address is empty. Subject: {}", subject);
+            return;
+        }
         if (!mailEnabled) {
             log.info("[MAIL DISABLED] Would send to {}: {}\n{}", to, subject, body);
             return;
